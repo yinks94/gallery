@@ -1,25 +1,42 @@
 <template>
-  <div class="app">
-    <div class="container py-4">
-      <!-- 헤더 -->
-      <header class="pb-4 mb-4 border-bottom">
-        <router-link to="/" class="text-dark text-decoration-none">
-          <b class="fs-4">Gallery Application</b>
-        </router-link>
-      </header>
-      <!-- 메인 -->
-      <main>
-        <!-- 라우터 뷰 -->
-        <router-view></router-view>
-      </main>
-      <!-- 푸터 -->
-      <footer class="pt-4 mt-4 border-top">&copy; 2024. Memo. All rights reserved.</footer>
-    </div>
-  </div>
+  <template v-if="accountStore.checked">
+    <Header/>
+    <main>
+      <router-view></router-view>
+    </main>
+    <Footer/>
+  </template>
 </template>
 
-<style lang="scss" scoped>
-.app .container {
-  max-width: 576px; // 최대 가로 크기 제한
+<script setup>
+import Header from '@/components/Header.vue'
+import Footer from '@/components/Footer.vue'
+
+import {useAccountStore} from "@/stores/account.js";
+import {watch} from "vue";
+import {useRoute} from "vue-router";
+import {check} from "@/services/accountService.js";
+
+const accountStore = useAccountStore();
+const route = useRoute();
+
+const checkAccount = async () => {
+  const res = await check();
+  if (res.status === 200) {
+    accountStore.setChecked(true);
+    accountStore.setLoggedIn(res.data === true);
+  } else {
+    accountStore.setChecked(false);
+  }
+
 }
-</style>
+
+(async function onCreated() {
+  await checkAccount();
+})();
+
+watch(() => route.path, async () => {
+  await checkAccount();
+})
+</script>
+

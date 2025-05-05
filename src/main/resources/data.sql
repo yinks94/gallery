@@ -7,4 +7,5 @@ VALUES ('Starry', '/img/001.jpg', 10000000, 5, CURRENT_TIMESTAMP),
        ('Houses', '/img/006.jpg', 60000000, 30, CURRENT_TIMESTAMP);
 
 INSERT INTO members (name, login_id, login_pw)
-VALUES ('알파', 'alpha@example.com', 'password111');
+VALUES ('알파', 'alpha@example.com', 'password111'),
+       ('인경수', 'yinks94@gmail.com', '123456');
